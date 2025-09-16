@@ -20,5 +20,6 @@ const messageSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+messageSchema.index({ chatpage: 1, user: 1, createdAt: -1 });
 const Message = mongoose.model("Message", messageSchema, "chat_messages");
 export default Message;

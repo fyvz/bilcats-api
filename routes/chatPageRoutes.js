@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import ChatPage from "../models/chatPage.js";
+import { resolveChatPageFull } from "../utils/resolve.js";
+import { protect } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
 // @route          GET /api/chatpages
@@ -19,7 +22,7 @@ router.get("/", async (req, res, next) => {
 // @route          POST /api/chatpages
 // @description    Create a new chat page
 // @access         Public (will be protected later)
-router.post("/", async (req, res, next) => {
+router.post("/", protect, async (req, res, next) => {
   try {
     const { title, description, slug } = req.body || {};
     if (!title.trim()) {
@@ -39,45 +42,26 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// @route          DELETE /api/chatpages
-// @description    Delete a chat page
-// @access         Public (will be protected later)
-// router.delete("/:id", async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       //To avoid the weird ObjectId error
-//       res.status(404);
-//       throw new Error("Chat page not found");
-//     }
-//     const chatPage = await ChatPage.findById(id);
-//     if (!chatPage) {
-//       res.status(404);
-//       throw new Error("Chat page not found");
-//     }
-
-//     // TODO: Check authorization,
-//     await chatPage.deleteOne();
-//     res.json({ message: "Chat page removed successfully" });
-//   } catch (err) {
-//     console.log(err);
-//     next(err);
-//   }
-// });
-
 // @route          DELETE /api/chatpageslug
-// @description    Delete a chat page using the slug
+// @description    Delete a chat page using the slug or id
 // @access         Public (will be protected later)
-router.delete("/:chatpageslug", async (req, res, next) => {
+router.delete("/:chatidorslug", protect, async (req, res, next) => {
   try {
-    const { chatpageslug } = req.params;
-    const chatPage = await ChatPage.findOne({ slug: chatpageslug });
+    const { chatidorslug: idOrSlug } = req.params;
+    const chatPage = await resolveChatPageFull(idOrSlug);
+    if (!chatPage) return res.status(404).json({ message: "Page not found" });
+
     if (!chatPage) {
       res.status(404);
       throw new Error("Chat page not found");
     }
+
+    //Fetch some info to reaffirm what happened
+    const targetId = chatPage._id;
+    const targetSlug = chatPage.slug;
+
     await chatPage.deleteOne();
-    res.json({ message: "Chat page removed successfully" });
+    res.json({ message: "Chat page deleted successfully", removed: { _id: targetId, slug: targetSlug } });
   } catch (err) {
     console.log(err);
     next(err);

@@ -9,5 +9,6 @@ const chatSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+chatSchema.index({ slug: 1, createdAt: -1 });
 const ChatPage = mongoose.model("ChatPage", chatSchema, "chat_pages");
 export default ChatPage;
