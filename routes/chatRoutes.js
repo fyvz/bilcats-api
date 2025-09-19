@@ -17,7 +17,7 @@ router.get("/:chatidorslug", async (req, res, next) => {
     if (!page) return res.status(404).json({ message: "Page not found" });
 
     const limit = Math.min(parseInt(req.query.limit ?? "50", 10), 100);
-    const messages = await Message.find({ chatpage: page._id }).sort({ createdAt: -1 }).limit(limit).lean();
+    const messages = await Message.find({ chatpage: page._id }).sort({ createdAt: -1 }).limit(limit).populate("user", "username").lean();
 
     res.json({ pageId: page._id.toString(), slug: page.slug, messages });
   } catch (err) {
