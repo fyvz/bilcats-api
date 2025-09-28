@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 // Routes
+import anouncementRouter from "./routes/anouncementRoutes.js"; // <-- Add this line
 import chatPageRouter from "./routes/chatPageRoutes.js";
 import messageRouter from "./routes/chatRoutes.js";
 import authRouter from "./routes/authRoutes.js";
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/api/chatpages", chatPageRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/anouncements", anouncementRouter);
 
 // 404 Fallback
 app.use((req, res, next) => {
