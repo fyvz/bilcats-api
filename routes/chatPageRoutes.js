@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import ChatPage from "../models/chatPage.js";
+import ChatPage from "../models/ChatPage.js";
 import { resolveChatPageFull } from "../utils/resolve.js";
 import { protect } from "../middleware/authMiddleware.js";
 

@@ -31,9 +31,13 @@ router.post("/register", async (req, res, next) => {
 
     const user = await User.create({
       name,
-      username,
-      email,
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
       password,
+      profile: {
+        avatar: "0",
+        description: "Welcome to my profile!",
+      },
     });
 
     //Create Tokens

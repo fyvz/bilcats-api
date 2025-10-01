@@ -10,15 +10,19 @@ const router = express.Router();
 // @access      Private (TODO)
 router.get("/:username", protect, async (req, res, next) => {
   try {
+    // First verify if the user exists
     const username = req.params.username;
-    const user = await User.find({ username: username }).select("username profile");
-    console.log("Reached here");
+    const user = await User.findOne({ username: username }).select("username profile");
     if (!user) {
       res.status(404);
       throw new Error("User not found");
     }
-    console.log(user);
-    res.json(user);
+
+    //Check if the user is the same as the one being modified
+    const ownProfile = user._id.equals(req.user._id); //True if visiting your own profile
+
+    //Return the result
+    res.json({ ownProfile, user });
   } catch (error) {
     next(error);
   }
