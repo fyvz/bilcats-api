@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import chatPageRouter from "./routes/chatPageRoutes.js";
 import messageRouter from "./routes/chatRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import profileRouter from "./routes/profileRoutes.js";
 
 const app = express(); //init app
 const PORT = process.env.PORT || 8000;
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/api/chatpages", chatPageRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
 
 // 404 Fallback
 app.use((req, res, next) => {

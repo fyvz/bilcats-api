@@ -10,6 +10,11 @@ const router = express.Router();
 // @desc        Register new user
 // @access      Public
 router.post("/register", async (req, res, next) => {
+  const registerationIsAllowed = process.env.ALLOW_REGISTRATIONS;
+  if (!registerationIsAllowed) {
+    res.status(400);
+    throw new Error("Registrations are not allowed as of now.");
+  }
   try {
     const { name, username, email, password } = req.body || {};
     if (!name?.trim() || !username?.trim() || !email?.trim() || !password?.trim()) {
@@ -91,7 +96,7 @@ router.post("/login", async (req, res, next) => {
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
     });
 
-    res.status(201).json({ accessToken, user: { id: user._id, name: user.name, username: user.username, email: user.email } });
+    res.status(201).json({ accessToken, user: { id: user._id, name: user.name, username: user.username, email: user.email, profile: user.profile } });
   } catch (err) {
     console.log(err);
     next(err);

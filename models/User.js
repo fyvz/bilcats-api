@@ -27,6 +27,20 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 6,
     },
+    profile: {
+      avatar: {
+        type: String,
+        required: true,
+        trim: true,
+        default: 0,
+      },
+      description: {
+        type: String,
+        trim: true,
+        required: true,
+        default: "Welcome to my profile!",
+      },
+    },
   },
   { timestamps: true }
 );

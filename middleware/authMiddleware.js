@@ -17,7 +17,7 @@ export const protect = async (req, res, next) => {
     const { payload } = await jwtVerify(token, JWT_SECRET); //Throws an error if fails
 
     console.log("Payload:", payload);
-    const user = await User.findById(payload.userId).select("_id name username email");
+    const user = await User.findById(payload.userId).select("_id name username email profile");
 
     if (!user) {
       //We refetch and check to make sure the token is still valid. It is one thing to verify it, but since JWT is stateless, it is important to verify everything all the time
